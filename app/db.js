@@ -15,12 +15,12 @@ connection.connect(function (err) {
 const dbQuery = (query, escape) => {
   return new Promise((resolve, reject) => {
     if (escape) {
-      connection.query(query, escape, (err, results, fields) => {
+      connection.query(query, escape, (err, results) => {
         if (err) return reject(err);
         resolve(results);
       });
     } else {
-      connection.query(query, (err, results, fields) => {
+      connection.query(query, (err, results) => {
         if (err) return reject(err);
         resolve(results);
       })
