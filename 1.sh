@@ -5,12 +5,12 @@ an="$GIT_AUTHOR_NAME"
 am="$GIT_AUTHOR_EMAIL"
 cn="$GIT_COMMITTER_NAME"
 cm="$GIT_COMMITTER_EMAIL"
-if [ "$GIT_COMMITTER_EMAIL" = "wangxiaohang@ascs.tech" ]
+if [ "$GIT_COMMITTER_EMAIL" = "wangxiaohang@ascs.tech[http]" ]
 then
 	cn="waiaan"
 	cm="waiann@163.com"
 fi
-if [ "$GIT_AUTHOR_EMAIL" = "wangxiaohang@ascs.tech" ]
+if [ "$GIT_AUTHOR_EMAIL" = "wangxiaohang@ascs.tech[http]" ]
 then
 	an="waiaan"
 	am="waiann@163.com"
