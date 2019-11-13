@@ -3,13 +3,19 @@ const routes = require('./routes');
 
 const http = require('http');
 
-const server = http.createServer(async function (req, res) {
+const server = http.createServer(function (req, res) {
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Headers", "X-Requested-With");
-  res.setHeader("Access-Control-Allow-Methods", "PUT,POST,GET,DELETE,OPTIONS");
-  let result = await routes(req.url);
-  result = JSON.parse(JSON.stringify(result));
-  res.end(JSON.stringify(result));
+  res.setHeader("Access-Control-Allow-Headers", "X-Requested-With,content-type");
+  res.setHeader("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH,OPTIONS");
+  let chunk = '';
+  req.on('data', (data) => {
+    chunk += data;
+  });
+  req.on('end', async () => {
+    let result = await routes(req, chunk);
+    result = JSON.parse(JSON.stringify(result));
+    res.end(JSON.stringify(result));
+  });
 })
 
 server.listen({ port: config.server.port }, function (err) {

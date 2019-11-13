@@ -10,7 +10,7 @@ class UrlParser {
     const matchArr = this.url.match(/^\/(\w+)\??/i);
     if (matchArr === null) return;
     this.api = matchArr[1];
-    console.log(`incoming api is ${this.api}`);
+    console.log(`request url is ${this.api}`);
     this.queryStartIndex = matchArr[0].length;
     this._getQuery();
   }
@@ -23,7 +23,7 @@ class UrlParser {
       let q = query[i].split('=');
       this.query[q[0]] = q[1];
     }
-    console.log('incoming query is ' + JSON.stringify(this.query));
+    // console.log('incoming query is ' + JSON.stringify(this.query));
   }
 }
 

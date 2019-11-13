@@ -1,14 +1,21 @@
 const { UrlParser } = require('./utils');
-const sql = require('./sql');
+const sqlQuery = require('./sql');
 
-const routes = (reqUrl) => {
-  const url = new UrlParser(reqUrl);
+const routes = (req, params) => {
+  if (params.trim() !== '') {
+    params = JSON.parse(params);
+  } else {
+    params = {};
+  }
+  console.log('request params is: ', JSON.stringify(params));
+  const url = new UrlParser(req.url);
   return new Promise((resolve, reject) => {
-    if (url.api === 'find') {
-      sql.find(url.query).then((results) => {
-        resolve(results);
-      })
-    }
+    sqlQuery(url.api, params).then((results) => {
+      resolve(results);
+    }, (err) => {
+      console.log(err);
+      reject(err);
+    });
   })
 }
 

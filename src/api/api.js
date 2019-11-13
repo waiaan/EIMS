@@ -5,7 +5,7 @@ const BASE_URL = process.env.VUE_APP_BASE_URL;
 
 const api = (type, data) => {
   let conf = config[type];
-  conf.url = BASE_URL + conf.url;
+  conf = Object.assign({}, conf, { url: BASE_URL + conf.url });
   if (data) {
     conf = Object.assign({}, conf, { data });
   }

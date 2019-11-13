@@ -1,17 +1,44 @@
-const db = require('./db');
+const mysql = require('./db');
 
-const queryStr = 'select concat(first_name," ",last_name) as name, email,  phone_number,  job_title,  salary,  commission_pct,  department_name, hiredate from employees e left join jobs j on e.job_id = j.job_id left join departments d on e.department_id = d.department_id'
+const createViewQuery = 'select e.employee_id,e_name.name, email,  phone_number,  job_title,  (e.salary*12+e.salary*ifnull(commission_pct,0)) as salary,  ifnull(department_name,"") as department_name, m.name as manager, date_format(hiredate,"%Y-%m-%d") as hiredate from employees e left join jobs j on e.job_id = j.job_id left join departments d on e.department_id = d.department_id left join employees_name e_name on e_name.employee_id=e.employee_id left join managers m on e.manager_id=m.employee_id where e.isDel=0 ';
 
-const find = (query) => {
-  return new Promise((resolve, reject) => {
-    if (Object.keys(query).length < 1) {
-      db(queryStr).then((results) => {
-        resolve(results);
-      })
+let pageSize = 10, pageNum = 1, offset = 0;
+let orderBy = 'order by employee_id';
+
+const apis = {
+  find: {
+    query: createViewQuery,
+    handleParams () {
+      return this.query + `${orderBy} limit ${pageSize} offset ${offset}`;
     }
+  },
+  getTotal: {
+    query: 'select count(*) as total from employees'
+  }
+}
+
+const sqlQuery = (apiType, params) => {
+  const api = apis[apiType];
+  let query = api.query;
+  if ('handleParams' in api) {
+    if ('pageSize' in params) {
+      pageSize = params.pageSize;
+    }
+    if ('pageNum' in params) {
+      pageNum = params.pageNum;
+    }
+    offset = pageSize * (pageNum - 1);
+    query = api.handleParams();
+  }
+  return new Promise((resolve, reject) => {
+    mysql.query(query, (err, results, fields) => {
+      if (err) {
+        console.log(err);
+        reject(err);
+      }
+      resolve(results);
+    })
   })
 }
 
-module.exports = {
-  find
-}
+module.exports = sqlQuery
