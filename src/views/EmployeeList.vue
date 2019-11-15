@@ -1,13 +1,15 @@
 <template>
   <el-container>
     <el-header style="text-align:right;">
-      <el-button type="primary">
-        + Add
-      </el-button>
+      <router-link to="/edit">
+        <el-button type="primary">
+          + Add
+        </el-button>
+      </router-link>
     </el-header>
     <el-main>
-      <el-table :data="data" style="width: 100%" stripe @sort-change="handleSortChange">
-        <el-table-column :prop="key" :label="key" v-for="(value, key,index) in data[0]" :key="index" sortable="custom" align="center">
+      <el-table :data="employees" style="width: 100%" stripe @sort-change="handleSortChange">
+        <el-table-column :prop="key" :label="key" v-for="(value, key,index) in employees[0]" :key="index" sortable="custom" align="center">
         </el-table-column>
         <el-table-column label="操作" align="center">
           <template slot-scope="scope">
@@ -28,10 +30,10 @@
 import api from '@/api/api'
 
 export default {
-  name: 'home',
+  name: 'EmployeeList',
   data () {
     return {
-      data: [],
+      employees: [],
       currentPage: 1,
       total: 0
     }
@@ -42,7 +44,7 @@ export default {
   methods: {
     fetchData (params) {
       api('getData', params).then((res) => {
-        this.data = res.data;
+        this.employees = res.data;
       });
       api('getTotal').then((res) => {
         this.total = res.data[0].total;
@@ -61,8 +63,18 @@ export default {
 
     },
     handleDelete (index, row) {
-
+      const id = this.employees[index].employee_id;
+      api('delete', { id }).then((res) => {
+        if (res.data.changedRows === 1) {
+          this.fetchData();
+        }
+      })
     }
   }
 }
 </script>
+<style lang="scss" scoped>
+::v-deep .el-table {
+  font-size: 16px;
+}
+</style>

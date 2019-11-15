@@ -8,6 +8,9 @@ const server = http.createServer(function (req, res) {
   res.setHeader("Access-Control-Allow-Headers", "X-Requested-With,content-type");
   res.setHeader("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH,OPTIONS");
   let chunk = '';
+  if (req.method === 'OPTIONS') {
+    res.end();
+  }
   req.on('data', (data) => {
     chunk += data;
   });
