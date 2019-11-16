@@ -29,11 +29,11 @@
             </el-table-column>
             <el-table-column prop="department_name" label="department_name" sortable="custom" align="center" width="200">
             </el-table-column>
-            <el-table-column prop="employee_id" label="salary" sortable="custom" align="center">
+            <el-table-column prop="salary" label="salary" sortable="custom" align="center">
             </el-table-column>
             <el-table-column prop="manager" label="manager" sortable="custom" align="left">
             </el-table-column>
-            <el-table-column prop="hiredate" label="employee_id" sortable="custom" align="center">
+            <el-table-column prop="hiredate" label="hiredate" sortable="custom" align="center">
             </el-table-column>
             <el-table-column label="operation" align="center">
               <template slot-scope="scope">
