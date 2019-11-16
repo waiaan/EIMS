@@ -1,6 +1,7 @@
 export default {
   getData: {
-    url: 'find'
+    url: 'find',
+    method: 'post'
   },
   getTotal: {
     url: 'getTotal'

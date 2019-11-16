@@ -1,6 +1,6 @@
 const mysql = require('./db');
 
-const createViewQuery = 'select e.employee_id,e_name.name, email,  phone_number,  job_title,  (e.salary*12+e.salary*ifnull(commission_pct,0)) as salary,  ifnull(department_name,"") as department_name, m.name as manager, date_format(hiredate,"%Y-%m-%d") as hiredate from employees e left join jobs j on e.job_id = j.job_id left join departments d on e.department_id = d.department_id left join employees_name e_name on e_name.employee_id=e.employee_id left join managers m on e.manager_id=m.employee_id where e.isDel=0 ';
+const createViewQuery = 'select e.employee_id,e_name.name, email,  phone_number,  job_title, salary,commission_pct,  ifnull(department_name,"") as department_name, m.name as manager, date_format(hiredate,"%Y-%m-%d") as hiredate from employees e left join jobs j on e.job_id = j.job_id left join departments d on e.department_id = d.department_id left join employees_name e_name on e_name.employee_id=e.employee_id left join managers m on e.manager_id=m.employee_id where e.isDel=0 ';
 
 let pageSize = 10, pageNum = 1, offset = 0;
 let orderBy = 'order by e_name.name';

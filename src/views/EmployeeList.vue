@@ -1,23 +1,52 @@
 <template>
   <el-container>
-    <el-header style="text-align:right;">
-      <router-link to="/edit">
-        <el-button type="primary">
-          + Add
-        </el-button>
-      </router-link>
+    <el-header class="header-title">
+      Employee Information Management System
     </el-header>
     <el-main>
-      <el-table :data="employees" style="width: 100%" stripe @sort-change="handleSortChange">
-        <el-table-column :prop="key" :label="key" v-for="(value, key,index) in employees[0]" :key="index" sortable="custom" align="center">
-        </el-table-column>
-        <el-table-column label="操作" align="center">
-          <template slot-scope="scope">
-            <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-            <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
-          </template>
-        </el-table-column>
-      </el-table>
+      <el-container>
+        <el-header style="text-align:right;">
+          <router-link :to="{name:'employeeEdit'}">
+            <el-button type="primary">
+              + Add
+            </el-button>
+          </router-link>
+        </el-header>
+        <el-main>
+          <el-table :data="employees" style="width: 100%" stripe @sort-change="handleSortChange" header-cell-class-name="header-cell">
+            <el-table-column label="index" width="70" align="center">
+              <template slot-scope="scope"><span>{{scope.$index+(pageNum - 1) * pageSize + 1}} </span></template>
+            </el-table-column>
+            <el-table-column prop="employee_id" label="employee_id" sortable="custom" align="center">
+            </el-table-column>
+            <el-table-column prop="name" label="name" sortable="custom" align="left">
+            </el-table-column>
+            <el-table-column prop="phone_number" label="phone_number" sortable="custom" align="left">
+            </el-table-column>
+            <el-table-column prop="email" label="email" sortable="custom" align="left">
+            </el-table-column>
+            <el-table-column prop="job_title" label="job_title" sortable="custom" align="left">
+            </el-table-column>
+            <el-table-column prop="department_name" label="department_name" sortable="custom" align="center" width="200">
+            </el-table-column>
+            <el-table-column prop="employee_id" label="salary" sortable="custom" align="center">
+            </el-table-column>
+            <el-table-column prop="manager" label="manager" sortable="custom" align="left">
+            </el-table-column>
+            <el-table-column prop="hiredate" label="employee_id" sortable="custom" align="center">
+            </el-table-column>
+            <el-table-column label="operation" align="center">
+              <template slot-scope="scope">
+                <router-link :to="{name:'employeeEdit',params:{employee:employees[scope.$index]}}" class="button-left">
+                  <el-button size="mini" type="success">EDIT</el-button>
+                </router-link>
+                <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">DELETE</el-button>
+                {{scope.row.index}}
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-main>
+      </el-container>
     </el-main>
     <el-footer style="text-align:right;">
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 20, 30, 40]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="total" background>
@@ -35,11 +64,13 @@ export default {
     return {
       employees: [],
       currentPage: 1,
-      total: 0
+      total: 0,
+      pageSize: 10,
+      pageNum: 1
     }
   },
   created () {
-    this.fetchData();
+    this.fetchData({ pageSize: this.pageSize, pageNum: this.pageNum });
   },
   methods: {
     fetchData (params) {
@@ -51,15 +82,14 @@ export default {
       });
     },
     handleSizeChange (pageSize) {
+      this.pageSize = pageSize;
       this.fetchData({ pageSize });
     },
     handleCurrentChange (pageNum) {
+      this.pageNum = pageNum;
       this.fetchData({ pageNum });
     },
     handleSortChange (col, field, sort) {
-
-    },
-    handleEdit (index, row) {
 
     },
     handleDelete (index, row) {

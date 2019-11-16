@@ -1,3 +1,9 @@
+const log = (msg) => {
+  const now = new Date().toLocaleString();
+  console.log('\r\n');
+  console.log(`${now}  ${msg}`);
+}
+
 class UrlParser {
   constructor(url) {
     this.url = url;
@@ -10,7 +16,6 @@ class UrlParser {
     const matchArr = this.url.match(/^\/(\w+)\??/i);
     if (matchArr === null) return;
     this.api = matchArr[1];
-    console.log(`request url is ${this.api}`);
     this.queryStartIndex = matchArr[0].length;
     this._getQuery();
   }
@@ -23,10 +28,10 @@ class UrlParser {
       let q = query[i].split('=');
       this.query[q[0]] = q[1];
     }
-    // console.log('incoming query is ' + JSON.stringify(this.query));
   }
 }
 
 module.exports = {
-  UrlParser
+  UrlParser,
+  log
 }

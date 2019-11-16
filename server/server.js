@@ -1,5 +1,6 @@
 const config = require('./config');
 const routes = require('./routes');
+const { log } = require('./utils');
 
 const http = require('http');
 
@@ -10,20 +11,22 @@ const server = http.createServer(function (req, res) {
   let chunk = '';
   if (req.method === 'OPTIONS') {
     res.end();
+  } else {
+    req.on('data', (data) => {
+      chunk += data;
+    });
+    req.on('end', async () => {
+      let result = await routes(req, chunk);
+      result = JSON.parse(JSON.stringify(result));
+      res.end(JSON.stringify(result));
+    });
   }
-  req.on('data', (data) => {
-    chunk += data;
-  });
-  req.on('end', async () => {
-    let result = await routes(req, chunk);
-    result = JSON.parse(JSON.stringify(result));
-    res.end(JSON.stringify(result));
-  });
+
 })
 
 server.listen({ port: config.server.port }, function (err) {
   if (err) throw new Error(err);
-  console.log(`server is running on port ${config.server.port}`)
+  log(`server is running on port ${config.server.port}`)
 });
 
 module.exports = server;

@@ -1,4 +1,5 @@
 const config = require('./config');
+const { log } = require('./utils');
 
 const mysql = require('mysql');
 
@@ -9,7 +10,7 @@ connection.connect(function (err) {
     console.error('error connecting: ' + err.stack);
     return;
   }
-  console.log('connected as id ' + connection.threadId);
+  log('connected as id ' + connection.threadId);
 })
 
 
