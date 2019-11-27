@@ -1,32 +1,26 @@
-const config = require('./config');
-const routes = require('./routes');
-const { log } = require('./utils');
-
 const http = require('http');
 
-const server = http.createServer(function (req, res) {
-  res.setHeader("Access-Control-Allow-Origin", "*");
+const config = require('./config/config');
+const { log } = require('./utils/utils');
+const router = require('./router/router');
+
+const allowedOrigins = ['http://172.16.100.176:8081', 'http://127.0.0.1:8081', 'http://localhost:8081'];
+
+const server = http.createServer(async function (req, res) {
+  const origin = req.headers.origin;
+  if (allowedOrigins.indexOf(origin) > -1) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+  }
   res.setHeader("Access-Control-Allow-Headers", "X-Requested-With,content-type");
   res.setHeader("Access-Control-Allow-Methods", "GET,PUT,POST,DELETE,PATCH,OPTIONS");
-  let chunk = '';
-  if (req.method === 'OPTIONS') {
-    res.end();
-  } else {
-    req.on('data', (data) => {
-      chunk += data;
-    });
-    req.on('end', async () => {
-      let result = await routes(req, chunk);
-      result = JSON.parse(JSON.stringify(result));
-      res.end(JSON.stringify(result));
-    });
+  if (req.url === '/favicon.ico' || req.method === 'OPTIONS') {
+    return res.end('');
   }
-
+  req.url = req.url.replace('/' + config.version, '');
+  router(req, res);
 })
 
 server.listen({ port: config.server.port }, function (err) {
   if (err) throw new Error(err);
   log(`server is running on port ${config.server.port}`)
 });
-
-module.exports = server;

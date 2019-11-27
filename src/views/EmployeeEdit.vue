@@ -55,7 +55,7 @@
   </el-container>
 </template>
 <script>
-import api from '@/api/api'
+import api from '@/api/http'
 
 export default {
   name: 'EmployeeEdit',

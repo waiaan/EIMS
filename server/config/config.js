@@ -3,9 +3,11 @@ module.exports = {
     address: 'localhost',
     user: 'root',
     password: '',
-    database: 'myemployees'
+    database: 'myemployees',
+    multipleStatements: true
   },
   server: {
     port: 996
-  }
+  },
+  version: 'v1'
 }

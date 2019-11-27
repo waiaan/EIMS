@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import api from '@/api/api'
+import http from '@/api/http'
 
 export default {
   name: 'EmployeeList',
@@ -70,31 +70,29 @@ export default {
     }
   },
   created () {
-    this.fetchData({ pageSize: this.pageSize, pageNum: this.pageNum });
+    this.fetchData();
   },
   methods: {
-    fetchData (params) {
-      api('getData', params).then((res) => {
-        this.employees = res.data;
-      });
-      api('getTotal').then((res) => {
-        this.total = res.data[0].total;
+    fetchData () {
+      http('getEmployees', { pageSize: this.pageSize, pageNum: this.pageNum }).then((res) => {
+        this.employees = res.rows;
+        this.total = res.total;
       });
     },
     handleSizeChange (pageSize) {
       this.pageSize = pageSize;
-      this.fetchData({ pageSize });
+      this.fetchData();
     },
     handleCurrentChange (pageNum) {
       this.pageNum = pageNum;
-      this.fetchData({ pageNum });
+      this.fetchData();
     },
     handleSortChange (col, field, sort) {
 
     },
     handleDelete (index, row) {
       const id = this.employees[index].employee_id;
-      api('delete', { id }).then((res) => {
+      http('deleteEmployees', { id }).then((res) => {
         if (res.data.changedRows === 1) {
           this.fetchData();
         }
