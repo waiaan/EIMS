@@ -1,12 +1,12 @@
 const log = (msg) => {
   const now = new Date().toLocaleString();
   console.log('\r\n');
-  console.log('<------------start-------------');
+  console.log('<- - - - - - start - - - - - -');
   console.log('\r\n');
   console.log(`${now}`);
   console.dir(msg);
   console.log('\r\n');
-  console.log('-------------end-------------->');
+  console.log('- - - - - - end- - - - - - >');
 }
 
 const parseQuery = (str) => {

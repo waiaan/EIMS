@@ -1,25 +1,33 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import EmployeeList from '../views/EmployeeList.vue'
-import EmployeeEdit from '../views/EmployeeEdit.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '/',
-    name: 'employeeList',
-    component: EmployeeList
+    name: 'home',
+    redirect: { name: 'employeeList' }
   },
   {
-    path: '/edit',
+    path: '/employees',
+    name: 'employeeList',
+    component: () => import('@/views/employees/EmployeeList.vue')
+  },
+  {
+    path: '/employee/edit',
     name: 'employeeEdit',
-    component: EmployeeEdit
+    component: () => import('@/views/employees/EmployeeEdit.vue')
   }
 ]
 
 const router = new VueRouter({
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  console.log(to)
+  next();
 })
 
 export default router

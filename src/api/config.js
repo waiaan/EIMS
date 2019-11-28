@@ -13,8 +13,7 @@ const URLS = {
   employees: `${API_VERSION}employees`,
   locations: `${API_VERSION}locations`,
   departments: `${API_VERSION}departments`,
-  jobs: `${API_VERSION}jobs`,
-  managers: `${API_VERSION}managers`
+  jobs: `${API_VERSION}jobs`
 }
 
 for (let field in URLS) {
