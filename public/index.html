@@ -6,7 +6,11 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
   <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+  <% if (htmlWebpackPlugin.options.environment === 'production') { %>
   <link rel="preload" href="./js/vue.min.js" as="script">
+  <% }if (htmlWebpackPlugin.options.environment === 'development') { %>
+  <link rel="preload" href="./js/vue.js" as="script">
+  <%}%>
   <link rel="preload" href="./js/vuex.min.js" as="script">
   <link rel="preload" href="./js/axios.min.js" as="script">
   <link rel="preload" href="./js/element-ui.js" as="script">
@@ -23,11 +27,15 @@
   </noscript>
   <div id="app"></div>
   <!-- built files will be auto injected -->
+  <% if (htmlWebpackPlugin.options.environment === 'production') { %>
   <script src="./js/vue.min.js"></script>
+  <% }else if(htmlWebpackPlugin.options.environment === 'development') {%>
+  <script src="./js/vue.js"></script>
+  <%}%>
   <script src="./js/axios.min.js"></script>
   <script src="./js/element-ui.js"></script>
   <script src="./js/vue-router.min.js"></script>
   <script src="./js/vuex.min.js"></script>
-</body>
+  </body>
 
 </html>

@@ -1,3 +1,5 @@
+const ENV = process.env.NODE_ENV;
+
 module.exports = {
   configureWebpack: config => {
     config.externals = {
@@ -7,5 +9,13 @@ module.exports = {
       axios: 'axios',
       vuex: 'Vuex'
     }
+  },
+  chainWebpack: config => {
+    config
+      .plugin('html')
+      .tap(args => {
+        args[0].environment = ENV;
+        return args;
+      });
   }
 }

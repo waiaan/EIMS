@@ -1,5 +1,5 @@
-const config = require('../config/config');
-const { log } = require('../utils/utils');
+const config = require('../config');
+const { log } = require('../utils');
 
 const mysql = require('mysql');
 

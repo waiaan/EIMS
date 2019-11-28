@@ -37,10 +37,7 @@
 </template>
 <script>
 export default {
-  name: 'App',
-  beforeRouteUpdate (to, from, next) {
-    console.log(arguments)
-  }
+  name: 'App'
 }
 </script>
 <style lang="scss">

@@ -1,5 +1,8 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+// import store from '../store'
+
+// const { state, commit } = store;
 
 Vue.use(VueRouter)
 
@@ -11,7 +14,7 @@ const routes = [
   },
   {
     path: '/employees',
-    name: 'employeeList',
+    name: 'employeesList',
     component: () => import('@/views/employees/EmployeeList.vue')
   },
   {
@@ -26,7 +29,7 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log(to)
+  // console.log(to, from);
   next();
 })
 

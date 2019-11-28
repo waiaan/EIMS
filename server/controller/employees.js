@@ -1,6 +1,6 @@
 const url = require('url');
 
-const { parseQuery } = require('../utils/utils')
+const { parseQuery } = require('../utils')
 const { employeesModel } = require('../model')
 
 const employees = {

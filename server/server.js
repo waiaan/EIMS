@@ -1,8 +1,8 @@
 const http = require('http');
 
-const config = require('./config/config');
-const { log } = require('./utils/utils');
-const router = require('./router/router');
+const config = require('./config');
+const { log } = require('./utils');
+const router = require('./router');
 
 const allowedOrigins = ['http://172.16.100.176:8081', 'http://127.0.0.1:8081', 'http://localhost:8081'];
 

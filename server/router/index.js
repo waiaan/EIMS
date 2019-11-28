@@ -1,6 +1,6 @@
 const url = require('url');
 
-const { log } = require('../utils/utils')
+const { log } = require('../utils')
 const { employees } = require('../controller')
 
 const router = (req, res) => {

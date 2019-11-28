@@ -1,6 +1,6 @@
-const { log } = require('../utils/utils');
+const { log } = require('../utils');
 
-const query = require('../database/db');
+const query = require('../database');
 
 const employees = {
   getAll: (params, res) => {
