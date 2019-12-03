@@ -1,8 +1,5 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-// import store from '../store'
-
-// const { state, commit } = store;
 
 Vue.use(VueRouter)
 
@@ -10,17 +7,31 @@ const routes = [
   {
     path: '/',
     name: 'home',
-    redirect: { name: 'employeeList' }
+    redirect: { name: 'employeesList' },
+    meta: {
+      title: 'home'
+    }
   },
   {
     path: '/employees',
     name: 'employeesList',
-    component: () => import('@/views/employees/EmployeeList.vue')
+    component: () => import('@/views/employees'),
+    meta: {
+      title: 'employees'
+    }
   },
   {
     path: '/employee/edit',
     name: 'employeeEdit',
-    component: () => import('@/views/employees/EmployeeEdit.vue')
+    component: () => import('@/views/employees/edit.vue'),
+    meta: {
+      title: ''
+    }
+  },
+  {
+    path: '/jobs',
+    name: 'jobs',
+    component: () => import('@/views/jobs')
   }
 ]
 
@@ -29,7 +40,16 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  // console.log(to, from);
+  if (to.name.indexOf('Edit') > -1) {
+    const paramsLength = Object.keys(to.params).length;
+    let prefix = '';
+    if (paramsLength > 0) {
+      prefix = 'edit ';
+    } else {
+      prefix = 'add ';
+    }
+    to.meta && (to.meta.title = prefix + to.name.replace('Edit', ''));
+  }
   next();
 })
 

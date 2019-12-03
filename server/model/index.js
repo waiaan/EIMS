@@ -1,5 +1,8 @@
-const employeesModel = require('./employees')
+const employees = require('./employees')
+const jobs = require('./jobs')
+const departments = require('./departments')
+const locations = require('./locations')
 
 module.exports = {
-  employeesModel
+  employees, jobs, departments, locations
 }

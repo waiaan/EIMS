@@ -1,9 +1,11 @@
 <template>
   <el-container>
     <el-main>
-      <el-table :data="employees" style="width: 100%" stripe @sort-change="handleSortChange" header-cell-class-name="header-cell">
+      <el-table :data="employees.rows" stripe @sort-change="handleSortChange" header-cell-class-name="header-cell" :default-sort="sort">
         <el-table-column label="index" width="70" align="center">
-          <template slot-scope="scope"><span>{{scope.$index+(pageNum - 1) * pageSize + 1}} </span></template>
+          <template slot-scope="scope">
+            <span>{{scope.$index+(pages.pageNum - 1) * pages.pageSize + 1}} </span>
+          </template>
         </el-table-column>
         <!-- <el-table-column prop="employee_id" label="employee_id" sortable="custom" align="center">
         </el-table-column> -->
@@ -32,7 +34,7 @@
             </router-link>
           </template>
           <template slot-scope="scope">
-            <router-link :to="{name:'employeeEdit',params:{employee:employees[scope.$index]}}" class="button-left">
+            <router-link :to="{name:'employeeEdit',params:{employee:employees.rows[scope.$index]}}" class="button-left">
               <el-button size="mini" type="success">EDIT</el-button>
             </router-link>
             <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">DELETE</el-button>
@@ -42,50 +44,62 @@
       </el-table>
     </el-main>
     <el-footer style="text-align:right;">
-      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 20, 30, 40]" :page-size="100" layout="total, sizes, prev, pager, next, jumper" :total="total" background>
+      <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="pages.currentPage" :page-sizes="[10, 20, 30, 40]" :page-size="pages.pageSize" layout="total, sizes, prev, pager, next, jumper" :total="employees.total" background>
       </el-pagination>
     </el-footer>
   </el-container>
 </template>
 <script>
-import http from '@/api/http'
+import { mapState, mapActions } from 'vuex'
+import http from '@/api'
 
 export default {
   name: 'EmployeeList',
   data () {
     return {
-      employees: [],
-      currentPage: 1,
-      total: 0,
-      pageSize: 10,
-      pageNum: 1
+      pages: {
+        currentPage: 1,
+        pageSize: 10,
+        pageNum: 1
+      },
+      sort: {
+        prop: 'name',
+        order: 'ascending'
+      }
     }
+  },
+  computed: {
+    ...mapState(['employees'])
   },
   created () {
     this.fetchData();
   },
   methods: {
+    ...mapActions(['getAllData', 'deleteData']),
     fetchData () {
-      http('getEmployees', { pageSize: this.pageSize, pageNum: this.pageNum }).then((res) => {
-        this.employees = res.rows;
-        this.total = res.total;
-      });
+      this.getAllData({        type: 'employees', params: {
+          pageSize: this.pages.pageSize, pageNum: this.pages.pageNum, orderBy: this.sort.prop, order: this.sort.order
+        }
+      })
     },
     handleSizeChange (pageSize) {
-      this.pageSize = pageSize;
+      this.pages.pageSize = pageSize;
       this.fetchData();
     },
     handleCurrentChange (pageNum) {
-      this.pageNum = pageNum;
+      this.pages.pageNum = pageNum;
       this.fetchData();
     },
-    handleSortChange (col, field, sort) {
-
+    handleSortChange ({ col, prop, order }) {
+      this.sort.prop = prop;
+      this.sort.order = order;
+      this.fetchData();
     },
     handleDelete (index, row) {
-      const id = this.employees[index].employee_id;
-      http('deleteEmployees', { id }).then((res) => {
-        if (res.data.changedRows === 1) {
+      const id = this.employees.rows[index].employee_id;
+      this.deleteData({ type: 'employees', id }).then((res) => {
+        const { message } = res;
+        if (message === 'success') {
           this.fetchData();
         }
       })
@@ -94,7 +108,4 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-::v-deep .el-table {
-  font-size: 16px;
-}
 </style>

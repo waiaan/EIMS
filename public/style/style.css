@@ -16,7 +16,9 @@ a {
   margin: 0;
   -webkit-box-sizing: border-box;
   box-sizing: border-box;
+  font-size: 16px;
 }
+
 
 a {
   text-decoration: none;
@@ -25,4 +27,12 @@ a {
 
 .button-left {
   margin-right: 5px;
+}
+
+.button-right {
+  margin-left: 5px;
+}
+
+.header-cell .cell {
+  text-align: center;
 }

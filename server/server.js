@@ -4,7 +4,7 @@ const config = require('./config');
 const { log } = require('./utils');
 const router = require('./router');
 
-const allowedOrigins = ['http://172.16.100.176:8081', 'http://127.0.0.1:8081', 'http://localhost:8081'];
+const allowedOrigins = ['http://172.16.100.176:8081', 'http://127.0.0.1:8081', 'http://127.0.0.1:996', 'http://localhost:8081', 'http://172.18.150.160:8081'];
 
 const server = http.createServer(async function (req, res) {
   const origin = req.headers.origin;

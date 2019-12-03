@@ -1,15 +1,7 @@
 <template>
   <el-container>
-    <el-header class="header-title">
-      <template v-if="formData.name===''">
-        ADD EMPLOYEE
-      </template>
-      <template v-else>
-        EDIT EMPLOYEE<span class="header-name">{{formData.name}}</span>
-      </template>
-    </el-header>
     <el-main>
-      <el-form :model="formData" :label-position="'right'" label-width="150px">
+      <el-form :model="formData" :label-position="'right'" label-width="150px" style="width:700px">
         <el-form-item label="name">
           <el-input v-model="formData.name" placeholder="input name" :size="'large'"></el-input>
         </el-form-item>
@@ -55,7 +47,7 @@
   </el-container>
 </template>
 <script>
-import api from '@/api/http'
+import http from '@/api'
 
 export default {
   name: 'EmployeeEdit',
@@ -80,15 +72,6 @@ export default {
     }
   },
   created () {
-    api('getJobs').then((res) => {
-      this.jobs = res.data;
-    })
-    api('getDepartments').then((res) => {
-      this.departments = res.data;
-    })
-    api('getManagers').then((res) => {
-      this.managers = res.data;
-    })
     this.$route.params.employee && (this.formData = Object.assign({}, this.$route.params.employee));
   },
   watch: {
@@ -126,14 +109,11 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.header-name {
-  color: blueviolet;
-  padding-left: 0.5em;
-}
 
-::v-deep .el-main {
-  padding-left: 30%;
-  padding-right: 30%;
+::v-deep .el-main,::v-deep .el-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 ::v-deep .el-form-item__label {

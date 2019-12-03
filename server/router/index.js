@@ -1,18 +1,22 @@
-const url = require('url');
-
 const { log } = require('../utils')
-const { employees } = require('../controller')
+const controller = require('../controller')
 
 const router = (req, res) => {
-  const { pathname } = url.parse(req.url);
   const { method } = req;
-  log(`request url is ${req.url}`);
-  if (pathname === '/employees') {
-    if (method === 'GET') {
-      employees.getAll(req, res);
+  log('request url is: ', `${req.url}`);
+  const urlReg = /\/([^/?]+)+/g;
+  const [pathname, id] = req.url.match(urlReg);
+  const type = pathname.replace(/^\//, '');
+  if (method === 'GET') {
+    if (id) {
+      controller.getOne(type, req, res);
+    } else {
+      controller.getAll(type, req, res);
     }
-  } else if (/\/employees\/S+/.test) {
-    employees.getOne(req, res);
+  } else if (method === 'DELETE') {
+    controller.delete(type, req, res)
+  } else {
+    log('router did not find any match')
   }
 }
 
