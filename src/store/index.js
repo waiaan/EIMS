@@ -25,7 +25,7 @@ export default new Vuex.Store({
       const api = 'get' + capitalize(type);
       return new Promise((resolve, reject) => {
         http(api, params).then((data) => {
-          commit('setData', { type, data: data.data });
+          commit('setData', { type, data: data });
           resolve(data);
         }, (err) => {
           reject(err)
@@ -37,6 +37,28 @@ export default new Vuex.Store({
       const api = 'delete' + capitalize(type);
       return new Promise((resolve, reject) => {
         http(api, id).then((data) => {
+          resolve(data);
+        }, (err) => {
+          reject(err)
+        })
+      })
+    },
+    saveData ({ commit, state, dispatch }, payload) {
+      const { type, params } = payload;
+      const api = 'modify' + capitalize(type);
+      return new Promise((resolve, reject) => {
+        http(api, params).then((data) => {
+          resolve(data);
+        }, (err) => {
+          reject(err)
+        })
+      })
+    },
+    addData ({ commit, state, dispatch }, payload) {
+      const { type, params } = payload;
+      const api = 'add' + capitalize(type);
+      return new Promise((resolve, reject) => {
+        http(api, params).then((data) => {
           resolve(data);
         }, (err) => {
           reject(err)

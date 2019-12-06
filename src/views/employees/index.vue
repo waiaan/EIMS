@@ -77,7 +77,9 @@ export default {
   methods: {
     ...mapActions(['getAllData', 'deleteData']),
     fetchData () {
-      this.getAllData({        type: 'employees', params: {
+      this.getAllData({
+        type: 'employees',
+        params: {
           pageSize: this.pages.pageSize, pageNum: this.pages.pageNum, orderBy: this.sort.prop, order: this.sort.order
         }
       })

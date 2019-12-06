@@ -1,8 +1,9 @@
 const log = (...args) => {
   const now = new Date().toLocaleString();
   console.log('\r\n');
-  console.log('<- - - - - - start - - - - - -');
+  console.log('<* * * * * * start * * * * * *');
   console.log(`${now}`);
+  console.log('\r\n');
   for (let i = 0; i < args.length; i++) {
     console.log(args[i]);
   }
@@ -30,6 +31,7 @@ const sendResponse = {
     res.end(JSON.stringify(resData));
   },
   error (res, msg, result) {
+    log('sql query error: ', msg);
     const resData = {
       code: 200,
       message: msg,

@@ -8,7 +8,7 @@ npm install
 ### Compiles and hot-reloads for development
 #### server
 ```
-node server/server.js
+npm run server
 ```
 #### client
 ```
@@ -18,7 +18,7 @@ npm run serve
 ### Compiles and minifies for production
 #### server
 ```
-node server/server.js
+npm run server
 ```
 #### client
 ```

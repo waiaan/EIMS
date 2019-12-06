@@ -19,6 +19,12 @@ const controller = {
   delete (type, req, res) {
     const id = /^\/[^/]+\/(\S+)/.exec(req.url)[1];
     model[type].delete(id, res)
+  },
+  modify (type, params, res) {
+    model[type].modify(params, res);
+  },
+  add (type, params, res) {
+    model[type].add(params, res);
   }
 }
 
