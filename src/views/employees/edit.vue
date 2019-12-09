@@ -40,13 +40,13 @@
     </el-main>
     <el-footer>
       <el-button type="primary" size="medium">SAVE</el-button>
-      <router-link :to="{name:'employeeList'}" class="button-right">
-        <el-button size="medium" type="info">CANCEL</el-button>
-      </router-link>
+      <el-button size="medium" type="info" @click="backward">CANCEL</el-button>
     </el-footer>
   </el-container>
 </template>
 <script>
+import { mapState, mapActions } from 'vuex'
+
 import http from '@/api'
 
 export default {
@@ -65,14 +65,16 @@ export default {
         hiredate: ''
       },
       managers: [],
-      jobs: [],
-      departments: [],
       minSalary: 0,
       maxSalary: Number.POSITIVE_INFINITY
     }
   },
+  computed: {
+    ...mapState(['jobs', 'departments'])
+  },
   created () {
     this.$route.params.employee && (this.formData = Object.assign({}, this.$route.params.employee));
+    this.jobs.length < 1 && this.getAllData({ type: 'jobs' })
   },
   watch: {
     'formData.job_title': function (val) {
@@ -87,6 +89,7 @@ export default {
     }
   },
   methods: {
+    ...mapActions(['getAllData']),
     selectDepartment (val) {
       let _id = 0;
       this.formData.manager = '';
@@ -104,13 +107,16 @@ export default {
           break;
         }
       }
+    },
+    backward () {
+      this.$router.go(-1);
     }
   }
 }
 </script>
 <style lang="scss" scoped>
-
-::v-deep .el-main,::v-deep .el-footer {
+::v-deep .el-main,
+::v-deep .el-footer {
   display: flex;
   justify-content: center;
   align-items: center;

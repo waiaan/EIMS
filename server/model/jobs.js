@@ -4,7 +4,17 @@ const query = require('../database');
 
 const employees = {
   getAll: (params, res) => {
-    const str = 'select * from jobs order by job_title';
+    let { sortProp, sortOrder } = params;
+    let order = 'asc';
+    if (!sortProp) {
+      sortProp = 'job_title';
+    }
+    if (sortOrder === 'ascending') {
+      order = 'asc'
+    } else if (sortOrder === 'descending') {
+      order = 'desc'
+    }
+    const str = `select * from jobs order by ${sortProp} ${order}`;
     query(str).then((rows) => {
       sendResponse.success(res, rows);
     }, (err) => {
@@ -35,6 +45,14 @@ const employees = {
           sendResponse.error(res, err, {});
         })
       }
+    }, (err) => {
+      sendResponse.error(res, err, {});
+    })
+  },
+  delete (id, res) {
+    const str = `delete from jobs where job_id='${id}'`;
+    query(str).then((rows) => {
+      sendResponse.success(res, rows);
     }, (err) => {
       sendResponse.error(res, err, {});
     })

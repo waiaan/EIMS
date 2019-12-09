@@ -19,30 +19,22 @@ const employees = {
         order = 'desc'
         break;
     }
-    query((connection) => {
-      const str = `select e.employee_id,e_name.name, email,  phone_number,  job_title, salary,commission_pct,  ifnull(department_name,"") as department_name, m.name as manager, date_format(hiredate,"%Y-%m-%d") as hiredate from employees e left join jobs j on e.job_id = j.job_id left join departments d on e.department_id = d.department_id left join employees_name e_name on e_name.employee_id=e.employee_id left join managers m on e.manager_id=m.employee_id where e.isDel=0 order by ${orderBy} ${order} limit ${pageSize} offset ${offset}; select count(*) as total from employees where isDel=0;`;
-      log('sql query is: ', str);
-      connection.query(str, function (err, rows) {
-        if (err) {
-          return sendResponse.error(res, err, { rows: [], total: 0 });
-        }
-        sendResponse.success(res, { rows: rows[0], ...rows[1][0] })
-      })
+    const str = `select e.employee_id,e_name.name, email,  phone_number,  job_title, salary,commission_pct,  ifnull(department_name,"") as department_name, m.name as manager, date_format(hiredate,"%Y-%m-%d") as hiredate from employees e left join jobs j on e.job_id = j.job_id left join departments d on e.department_id = d.department_id left join employees_name e_name on e_name.employee_id=e.employee_id left join managers m on e.manager_id=m.employee_id where e.isDel=0 order by ${orderBy} ${order} limit ${pageSize} offset ${offset}; select count(*) as total from employees where isDel=0;`;
+    query(str).then((rows) => {
+      sendResponse.success(res, { rows: rows[0], ...rows[1][0] })
+    }, (err) => {
+      sendResponse.error(res, err, { rows: [], total: 0 });
     })
   },
   getOne () {
 
   },
   delete (id, res) {
-    query((connection) => {
-      const str = `update employees set isDel=1 where employee_id=${id}`;
-      log('sql query is: ', str);
-      connection.query(str, function (err, rows) {
-        if (err) {
-          return sendResponse.error(res, err, {});
-        }
-        sendResponse.success(res, rows);
-      })
+    const str = `update employees set isDel=1 where employee_id=${id}`;
+    query(str).then((rows) => {
+      sendResponse.success(res, rows);
+    }, (err) => {
+      sendResponse.error(res, err, {});
     })
   }
 }

@@ -3,7 +3,7 @@
     <el-main>
       <div class="table-container">
         <el-form ref="form" :model="jobsData" label-width="0" :rules="formRules" :inline="true">
-          <el-table :data="jobsData.rows" header-cell-class-name="header-cell" :default-sort="{prop: 'job_title', order: 'ascending'}" stripe>
+          <el-table :data="jobsData.rows" header-cell-class-name="header-cell" :default-sort="{prop: 'job_title', order: 'ascending'}" @sort-change="changeSort" stripe>
             <el-table-column label="index" width="100" align="center">
               <template slot-scope="scope">
                 <span>
@@ -11,7 +11,7 @@
                 </span>
               </template>
             </el-table-column>
-            <el-table-column prop="job_id" label="job id" sortable>
+            <el-table-column prop="job_id" label="job id" sortable="custom">
               <template slot-scope="scope">
                 <div v-if="scope.row.status==='show'">
                   {{scope.row.job_id}}
@@ -23,7 +23,7 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column prop="job_title" label="job title" sortable>
+            <el-table-column prop="job_title" label="job title" sortable="custom">
               <template slot-scope="scope">
                 <div v-if="scope.row.status==='show'">
                   {{scope.row.job_title}}
@@ -35,7 +35,7 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column prop="min_salary" label="min salary" align="center" sortable>
+            <el-table-column prop="min_salary" label="min salary" align="center" sortable="custom">
               <template slot-scope="scope">
                 <div v-if="scope.row.status==='show'">
                   {{scope.row.min_salary}}
@@ -47,7 +47,7 @@
                 </div>
               </template>
             </el-table-column>
-            <el-table-column prop="max_salary" label="max salary" align="center" sortable>
+            <el-table-column prop="max_salary" label="max salary" align="center" sortable="custom">
               <template slot-scope="scope">
                 <div v-if="scope.row.status==='show'">
                   {{scope.row.max_salary}}
@@ -68,7 +68,7 @@
               <template slot-scope="scope">
                 <div v-if="scope.row.status==='show'">
                   <el-button size="mini" @click.stop="handleEdit(scope)">Edit</el-button>
-                  <el-button size="mini" type="danger" @click.stop="handleDelete(scope.$index, scope.row)">Delete</el-button>
+                  <el-button size="mini" type="danger" @click.stop="handleDelete(scope.$index)">Delete</el-button>
                 </div>
                 <div v-else-if="scope.row.status==='edit'">
                   <el-button type="primary" size="mini" @click.stop="save(scope,'modify')">Save</el-button>
@@ -100,7 +100,7 @@ export default {
       } else {
         for (let i = 0; i < this.jobsData.rows.length; i++) {
           const { job_id } = this.jobsData.rows[i];
-          if (value === job_id && i !== currIndex) {
+          if (value.toLowerCase() === job_id.toLowerCase() && i !== currIndex) {
             cb(new Error('job_id is already exist'))
           }
         }
@@ -115,7 +115,7 @@ export default {
       } else {
         for (let i = 0; i < this.jobsData.rows.length; i++) {
           const { job_title } = this.jobsData.rows[i];
-          if (value === job_title && i !== currIndex) {
+          if (value.toLowerCase() === job_title.toLowerCase() && i !== currIndex) {
             cb(new Error('job_title is already exist'))
           }
         }
@@ -136,29 +136,48 @@ export default {
           }
         ]
       },
-      currEditData: {}
+      currEditData: {},
+      sort: {
+        prop: 'job_title',
+        order: 'ascending'
+      }
     }
   },
   created () {
-    this.fetchData()
+    if (this.jobs.length < 1) {
+      this.fetchData()
+    } else {
+      this.jobsData.rows = this.jobs;
+      this.resetJobStatus();
+    }
   },
   computed: {
     ...mapState(['jobs'])
   },
   methods: {
-    ...mapActions(['getAllData', 'saveData', 'addData']),
+    ...mapActions(['getAllData', 'saveData', 'addData', 'deleteData']),
     fetchData () {
-      this.getAllData({ type: 'jobs' }).then((data) => {
-        this.jobsData = { rows: [] };
-        for (let i = 0; i < data.length; i++) {
-          this.jobsData.rows.push(data[i]);
-          this.$set(this.jobsData.rows[i], 'status', 'show');
+      this.getAllData(
+        {
+          type: 'jobs',
+          params: {
+            sortProp: this.sort.prop,
+            sortOrder: this.sort.order
+          }
         }
+      ).then((data) => {
+        this.jobsData = { rows: [] };
+        this.jobsData.rows = data;
+        this.resetJobStatus();
+        // for (let i = 0; i < data.length; i++) {
+        //   this.jobsData.rows.push(data[i]);
+        //   this.$set(this.jobsData.rows[i], 'status', 'show');
+        // }
       })
     },
     resetJobStatus () {
       for (let i = 0; i < this.jobsData.rows.length; i++) {
-        this.jobsData.rows[i].status = 'show';
+        this.$set(this.jobsData.rows[i], 'status', 'show');
       }
     },
     handleEdit (scope) {
@@ -196,6 +215,18 @@ export default {
     handleAdd () {
       this.resetJobStatus();
       this.jobsData.rows.push({ job_id: '', job_title: '', min_salary: 0, max_salary: 0, status: 'add' });
+    },
+    handleDelete (index) {
+      const { job_id } = this.jobsData.rows[index];
+      this.deleteData({ type: 'jobs', id: job_id }).then((res) => {
+        this.fetchData();
+      })
+    },
+    changeSort (...args) {
+      const { prop, order } = args[0];
+      this.sort.prop = prop;
+      this.sort.order = order;
+      this.fetchData();
     }
   }
 }
