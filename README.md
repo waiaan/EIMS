@@ -1,5 +1,8 @@
 # Employee Information Management System
 
+## TODO
+#### employee add/modify
+
 ## Project setup
 ```
 npm install

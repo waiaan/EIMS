@@ -12,9 +12,6 @@
           <el-menu-item index="1" @click="$router.push({name:'jobs'})">
             jobs
           </el-menu-item>
-          <el-menu-item index="2" @click="$router.push({name:'locations'})">
-            locations
-          </el-menu-item>
           <el-menu-item index="3" @click="$router.push({name:'departments'})">
             departments
           </el-menu-item>

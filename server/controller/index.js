@@ -14,7 +14,8 @@ const controller = {
     }
   },
   getOne (type, req, res) {
-
+    const id = /^\/[^/]+\/(\S+)/.exec(req.url)[1];
+    model[type].getOne(id, res)
   },
   delete (type, req, res) {
     const id = /^\/[^/]+\/(\S+)/.exec(req.url)[1];

@@ -34,7 +34,7 @@
             </router-link>
           </template>
           <template slot-scope="scope">
-            <router-link :to="{name:'employeeEdit',params:{employee:employees.rows[scope.$index]}}" class="button-left">
+            <router-link :to="{name:'employeeEdit',params:{id:employees.rows[scope.$index].employee_id}}" class="button-left">
               <el-button size="mini" type="success">EDIT</el-button>
             </router-link>
             <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)">DELETE</el-button>

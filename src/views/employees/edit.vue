@@ -2,8 +2,11 @@
   <el-container>
     <el-main>
       <el-form :model="formData" :label-position="'right'" label-width="150px" style="width:700px">
-        <el-form-item label="name">
-          <el-input v-model="formData.name" placeholder="input name" :size="'large'"></el-input>
+        <el-form-item label="first_name">
+          <el-input v-model="formData.first_name" placeholder="input first name" :size="'large'"></el-input>
+        </el-form-item>
+        <el-form-item label="last_name">
+          <el-input v-model="formData.last_name" placeholder="input last name" :size="'large'"></el-input>
         </el-form-item>
         <el-form-item label="email">
           <el-input v-model="formData.email" placeholder="input email" :size="'large'"></el-input>
@@ -39,7 +42,7 @@
       </el-form>
     </el-main>
     <el-footer>
-      <el-button type="primary" size="medium">SAVE</el-button>
+      <el-button type="primary" size="medium" @click="save">SAVE</el-button>
       <el-button size="medium" type="info" @click="backward">CANCEL</el-button>
     </el-footer>
   </el-container>
@@ -73,8 +76,9 @@ export default {
     ...mapState(['jobs', 'departments'])
   },
   created () {
-    this.$route.params.employee && (this.formData = Object.assign({}, this.$route.params.employee));
-    this.jobs.length < 1 && this.getAllData({ type: 'jobs' })
+    this.$route.params.id && this.fetchData(this.$route.params.id);
+    this.jobs.length < 1 && this.getAllData({ type: 'jobs' });
+    this.departments.length < 1 && this.getAllData({ type: 'departments' })
   },
   watch: {
     'formData.job_title': function (val) {
@@ -89,7 +93,12 @@ export default {
     }
   },
   methods: {
-    ...mapActions(['getAllData']),
+    ...mapActions(['getAllData', 'saveData', 'addData', 'getOne']),
+    fetchData (id) {
+      this.getOne({ type: 'employees', id }).then((res) => {
+        this.formData = res;
+      })
+    },
     selectDepartment (val) {
       let _id = 0;
       this.formData.manager = '';
@@ -110,6 +119,13 @@ export default {
     },
     backward () {
       this.$router.go(-1);
+    },
+    save () {
+      if ('employee_id' in this.formData) {
+        this.saveData({ type: 'employees', params: { ...this.formData } })
+      } else {
+        this.addData({ type: 'employees', params: { ...this.formData } })
+      }
     }
   }
 }

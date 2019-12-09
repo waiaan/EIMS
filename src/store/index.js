@@ -10,8 +10,7 @@ export default new Vuex.Store({
   state: {
     employees: [],
     jobs: [],
-    departments: [],
-    locations: []
+    departments: []
   },
   mutations: {
     setData (state, payload) {
@@ -26,6 +25,17 @@ export default new Vuex.Store({
       return new Promise((resolve, reject) => {
         http(api, params).then((data) => {
           commit('setData', { type, data: data });
+          resolve(data);
+        }, (err) => {
+          reject(err)
+        })
+      })
+    },
+    getOne ({ commit, state }, payload) {
+      const { type, id = '' } = payload;
+      const api = 'get' + capitalize(type);
+      return new Promise((resolve, reject) => {
+        http(api, id).then((data) => {
           resolve(data);
         }, (err) => {
           reject(err)
