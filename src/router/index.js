@@ -15,7 +15,7 @@ const routes = [
   {
     path: '/employees',
     name: 'employeesList',
-    component: () => import('@/views/employees'),
+    component: () => import('@/views/employees/list.vue'),
     meta: {
       title: 'employees'
     }
